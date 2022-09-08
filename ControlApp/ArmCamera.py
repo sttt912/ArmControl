@@ -1,105 +1,9 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[23]:
-
-
 import cv2
 import tkinter as tk
 from PIL import Image, ImageTk
 import os
 import numpy as np
-import json 
-
-
-g = 0
-x = 0
-y = 0
-z = 0
-servo_angle = 150
-
-  
-def splus(step=10):
-    global servo_angle
-    servo_angle+=step
-    create_servo_json(servo_angle, 'Servo')
-
-def sminus(step=10):
-    global servo_angle
-    servo_angle-=step
-    create_servo_json(servo_angle, 'Servo')
-    
-def zplus(step=1):
-    global g
-    global x
-    global y
-    global z
-    z+=step
-    create_move_json(g,x,y,z, 'Move')
-    
-def zminus(step=1):
-    global g
-    global x
-    global y
-    global z
-    z-=step
-    create_move_json(g,x,y,z, 'Move')
-    
-def up(step=1):
-    global g
-    global x
-    global y
-    global z
-    y+=step
-    create_move_json(g,x,y,z, 'Move')
-    
-def down(step=1):
-    global g
-    global x
-    global y
-    global z
-    y-=step
-    create_move_json(g,x,y,z, 'Move')
-    
-def left(step=1):
-    global g
-    global x
-    global y
-    global z
-    x-=step
-    create_move_json(g,x,y,z, 'Move')
-    
-
-def create_move_json(g, x, y, z, cmd):
-    trunk_template = [
-        'G', g,
-        'X', x,
-        'Y', y,
-        'Z', z
-    ]
-
-    to_json = {cmd: trunk_template}
-    
-    with open('cmd/data.json', 'w') as f:
-        json.dump(to_json, f, sort_keys=True, indent=2)
-    
-def create_servo_json(angle, cmd):
-    trunk_template = [
-        'G', angle
-    ]
-
-    to_json = {cmd: trunk_template}
-    
-    with open('cmd/data.json', 'w') as f:
-        json.dump(to_json, f, sort_keys=True, indent=2)
-        
-def right(step=1):
-    global g
-    global x
-    global y
-    global z
-    x+=step
-    create_move_json(g,x,y,z, 'Move')
+import ArmControl
     
 window = tk.Tk()
 window.title("Arm Camera")
@@ -156,21 +60,21 @@ def show_frame():
     label.after(10, show_frame)
 
 
-video_button = tk.Button(imageFrame, image = right_icon, command = right)
+video_button = tk.Button(imageFrame, image = right_icon, command = ArmControl.XCordinatesAdd)
 video_button.place(x=180, y = 400)
-photo_button = tk.Button(imageFrame, image = left_icon, command = left)
+photo_button = tk.Button(imageFrame, image = left_icon, command = ArmControl.XCordinatesSubtract)
 photo_button.place(x=320, y = 400)
-gallery_button = tk.Button(imageFrame, image = up_icon, command = up)
+gallery_button = tk.Button(imageFrame, image = up_icon, command = ArmControl.YCordinatesAdd)
 gallery_button.place(x=250, y = 340)
-gallery_button = tk.Button(imageFrame, image = down_icon, command = down)
+gallery_button = tk.Button(imageFrame, image = down_icon, command = ArmControl.YCordinatesSubtract)
 gallery_button.place(x=250, y = 460)
-gallery_button = tk.Button(imageFrame, image = zplus_icon, command = zplus)
+gallery_button = tk.Button(imageFrame, image = zplus_icon, command = ArmControl.ZCordinatesAdd)
 gallery_button.place(x=50, y = 340)
-gallery_button = tk.Button(imageFrame, image = zminus_icon, command = zminus)
+gallery_button = tk.Button(imageFrame, image = zminus_icon, command = ArmControl.ZCordinatesSubtract)
 gallery_button.place(x=50, y = 460)
-gallery_button = tk.Button(imageFrame, image = splus_icon, command = splus)
+gallery_button = tk.Button(imageFrame, image = splus_icon, command = ArmControl.ServoAddAngle)
 gallery_button.place(x=400, y = 340)
-gallery_button = tk.Button(imageFrame, image = sminus_icon, command = sminus)
+gallery_button = tk.Button(imageFrame, image = sminus_icon, command = ArmControl.ServoSubtractAngle)
 gallery_button.place(x=400, y = 460)
     
 show_frame()
