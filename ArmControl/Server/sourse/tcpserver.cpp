@@ -78,10 +78,28 @@ void TCPServer::sendComData(QString Data, QSerialPort *Com)
     }
 
     Data = Data + "\r";
-    Com->write(Data.toStdString().c_str());
-    qDebug()<<"COM: "<<Com;
-    qDebug()<<"Data: "<<Data.toStdString().c_str();
-    qDebug()<<"-------------------------------------------";
+    if (Data == "M114\r"){
+        Com->write(Data.toStdString().c_str());
+        qDebug()<<"COM: "<<Com;
+        qDebug()<<"Data: "<<Data.toStdString().c_str();
+        qDebug()<<"-------------------------------------------";
+        QByteArray data = Com->readAll();
+        qDebug() << "UART:" << data;
+        socket->write(data);
+     }else if (Data == "M119\r"){
+        Com->write(Data.toStdString().c_str());
+        qDebug()<<"COM: "<<Com;
+        qDebug()<<"Data: "<<Data.toStdString().c_str();
+        qDebug()<<"-------------------------------------------";
+        QByteArray data = Com->readAll();
+        qDebug() << "UART:" << data;
+        socket->write(data);
+     }else{
+        Com->write(Data.toStdString().c_str());
+        qDebug()<<"COM: "<<Com;
+        qDebug()<<"Data: "<<Data.toStdString().c_str();
+        qDebug()<<"-------------------------------------------";
+    }
 
 }
 
@@ -98,10 +116,12 @@ void TCPServer::openComPort(QString port)
     arduino->setParity(QSerialPort::NoParity);
     arduino->setStopBits(QSerialPort::OneStop);
     arduino->setFlowControl(QSerialPort::NoFlowControl);
-    arduino->open(QSerialPort::WriteOnly);
-    arduino->open(QIODevice::WriteOnly);
+    //arduino->open(QSerialPort::WriteOnly);
+    //arduino->open(QIODevice::WriteOnly);
+    arduino->open(QIODevice::ReadWrite);
     qDebug()<<arduino->isOpen();
     Arduinos.push_back(arduino);
+
     qDebug()<<"DONE";
 
 }
@@ -113,6 +133,7 @@ void TCPServer::incomingConnection(qintptr handle){
     connect(socket,SIGNAL(readyRead()),this,SLOT(socketReady()));
     connect(socket,SIGNAL(disconnected()),this,SLOT(socketDisconnected()));
     qDebug()<<"New client connected! ID: "<<handle;
+    //socket->write("Success connection");
 }
 //Read data that cames from client and pars
 void TCPServer::socketReady(){
@@ -135,9 +156,7 @@ void TCPServer::socketReady(){
             {
                 sendComData(list[i],Arduinos[i]);
             }
-
        }
-
 }
 //call after client disconnected and delete socket
 void TCPServer::socketDisconnected(){

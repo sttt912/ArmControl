@@ -36,14 +36,14 @@ for line in file:
 file.close()
 
 
-cap = cv2.VideoCapture(int(cnf[0]))
-cap2 = cv2.VideoCapture(int(cnf[1]))
+cap = cv2.VideoCapture(0)
+#cap2 = cv2.VideoCapture(int(cnf[1]))
 
 
 def show_frame():
     global frame
     _, frame = cap.read()
-    _, frame1 = cap2.read()
+    frame1 = frame
     
     rotate_90 = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE) 
     rotate_90_counter = cv2.rotate(frame1, cv2.ROTATE_90_COUNTERCLOCKWISE) 

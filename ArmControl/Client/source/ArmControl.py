@@ -13,6 +13,10 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((HOST, PORT))
 
 
+def UARTstart():
+    data = s.recv(5000).decode('utf-8')
+    print(data)
+
 def setZero():
     global g
     global x
@@ -33,6 +37,14 @@ def setCordinates(localx, localy, localz):
     z = localz
     create_move(g,x,y,z, 'Move')
 
+
+def servoCheckStatus():
+    strw = "M119"
+    s.sendall(strw.encode())
+    data = s.recv(1024).decode('utf-8')
+    print(data)
+    
+    
 def getZCordinates():
     global z
     return z
@@ -45,9 +57,11 @@ def getXCordinates():
     global x
     return x
 
-def getXCordinates():
-    global x
-    return x
+def getCordinates():
+    strw = "M114"
+    s.sendall(strw.encode())
+    data = s.recv(1024).decode('utf-8')
+    print(data)
 
 def getServo():
     global servo_angle
