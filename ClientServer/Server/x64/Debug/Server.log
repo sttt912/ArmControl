@@ -1,3 +1,0 @@
-﻿  Source.cpp
-C:\Users\User\Desktop\ClientServer\Server\Source.cpp(94,7): warning C4101: 'buffer': unreferenced local variable
-  Server.vcxproj -> C:\Users\User\Desktop\ClientServer\x64\Debug\Server.exe
